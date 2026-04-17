@@ -1,22 +1,22 @@
-name: 下载JM本子 (commit)
+名称: 下载JM本子 (commit)
 
-on:
+于:
   workflow_dispatch:
-  push:
-    paths:
+推送:
+路径:
       - '.github/workflows/download.yml' # 工作流定义
       - 'usage/workflow_download.py' # 下载脚本
       - 'assets/option/option_workflow_download.yml' # 配置文件
 
-jobs:
-  crawler:
-    runs-on: ubuntu-latest
-    env:
-      # 登录相关secrets
+作业:
+爬虫:
+运行于: ubuntu-latest
+环境:
+      # 登录相关密钥
       JM_USERNAME: ${{ secrets.JM_USERNAME }}
       JM_PASSWORD: ${{ secrets.JM_PASSWORD }}
 
-      # 邮件相关secrets
+      # 邮件相关密钥
       EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
       EMAIL_TO: ${{ secrets.EMAIL_TO }}
       EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
@@ -26,27 +26,27 @@ jobs:
       # 固定值
       JM_DOWNLOAD_DIR: /home/runner/work/jmcomic/download/
       ZIP_NAME: '本子.tar.gz'
-      UPLOAD_NAME: 'Click me to download'
+UPLOAD_NAME: '点击我下载'
 
-    steps:
+步骤:
       - uses: actions/checkout@v4
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
+      - 名称: 设置 Python 3.11
+用途: actions/setup-python@v5
+与:
+python版本: "3.11"
 
-      - name: Install Dependency
+      - name: 安装依赖
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
 
       - name: 安装jmcomic（pip）
-        if: ${{ github.ref != 'refs/heads/dev' }}
+如果: ${{github.ref !='refs/heads/dev' }}
         run: |
           pip install jmcomic -i https://pypi.org/project --upgrade
 
       - name: 安装jmcomic（local）
-        if: ${{ github.ref == 'refs/heads/dev' }}
+如果: ${{github.ref =='refs/heads/dev' }}
         run: |
           pip install -e ./
 
@@ -59,12 +59,12 @@ jobs:
         run: |
           cd $JM_DOWNLOAD_DIR
           tar -zcvf "../$ZIP_NAME" ./
-          mv "../$ZIP_NAME" .
+mv “../$ZIP_NAME” .
 
-      - name: 上传结果
+      - 名称: 上传结果
         uses: actions/upload-artifact@v4
-        with:
+与:
           name: ${{ env.UPLOAD_NAME }}
-          path: ${{ env.JM_DOWNLOAD_DIR }}/${{ env.ZIP_NAME }}
-          if-no-files-found: warn
+路径: ${{env.JM_DOWNLOAD_DIR}}/${{env.ZIP_NAME}}
+如果未找到文件: 警告
           retention-days: 90
