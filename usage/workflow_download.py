@@ -1,10 +1,9 @@
-从jmcomic导入 *
-从jmcomic.导入JmcomicUI
+from jmcomic import *
+from jmcomic.cl import JmcomicUI
 
 # 下方填入你要下载的本子的id，一行一个，每行的首尾可以有空白字符
 jm_albums = '''
-
-
+1256838
 
 
 '''
@@ -20,7 +19,7 @@ jm_photos = '''
 def env(name, default, trim=('[]', '""', "''")):
     import os
     value = os.getenv(name, None)
-    如果值为 无 或值 =='':
+    if value is None or value == '':
         return default
 
     for pair in trim:
